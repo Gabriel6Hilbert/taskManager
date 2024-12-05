@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Tarefas - Gerentes e Líderes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .task-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+        }
+        .post-it {
+            background-color: #ffe066;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .obs-box {
+            background: #e3f2fd;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .btn-priority {
+            background: #ff9800;
+            color: white;
+        }
+        .btn-priority:hover {
+            background: #e68a00;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-dark text-white text-center p-3">
+        <h1>Gerenciamento de Tarefas - Gerentes e Líderes</h1>
+    </header>
+
+    <main class="container py-4">
+        <a href="index.html" class="btn btn-secondary btn-back mb-3">Voltar</a>
+        <section>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h5">Criar Nova Tarefa</h2>
+                </div>
+                <div class="card-body">
+                    <form id="taskForm">
+                        <div class="mb-3">
+                            <label for="taskName" class="form-label">Nome da Tarefa:</label>
+                            <input type="text" id="taskName" class="form-control" placeholder="Ex: Analisar relatórios" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskDate" class="form-label">Data de Entrega:</label>
+                            <input type="date" id="taskDate" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskStatus" class="form-label">Status da Tarefa:</label>
+                            <select id="taskStatus" class="form-select" required>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Em Andamento">Em Andamento</option>
+                                <option value="Concluída">Concluída</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Criar Tarefa</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-5">
+            <h2>Lista de Tarefas</h2>
+            <div id="taskList" class="mt-3">
+            </div>
+        </section>
+
+        <section class="mt-5">
+            <h2>Relatórios e Observações</h2>
+            <div class="obs-box">
+                <h5>Relatório Atual:</h5>
+                <p>15 Tarefas pendentes, 10 em andamento, 5 concluídas.</p>
+            </div>
+            <div class="obs-box">
+                <h5>Adicionar Observação:</h5>
+                <textarea id="managerObservation" class="form-control" rows="3" placeholder="Adicione comentários ou observações importantes aqui."></textarea>
+                <button id="addObservation" class="btn btn-primary btn-sm mt-2">Salvar Observação</button>
+                <div id="observationList" class="mt-3">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2024 TaskMask. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const taskForm = document.getElementById('taskForm');
+        const taskList = document.getElementById('taskList');
+        const addObservation = document.getElementById('addObservation');
+        const observationList = document.getElementById('observationList');
+
+        taskForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const taskName = document.getElementById('taskName').value;
+            const taskDate = document.getElementById('taskDate').value;
+            const taskStatus = document.getElementById('taskStatus').value;
+
+            const taskCard = document.createElement('div');
+            taskCard.classList.add('task-card');
+
+            taskCard.innerHTML = `
+                <h4>${taskName}</h4>
+                <p><strong>Data de Entrega:</strong> <input type="date" class="form-control d-inline w-auto" value="${taskDate}" onchange="updateDate(this)"></p>
+                <p><strong>Status:</strong> ${taskStatus}</p>
+                <button class="btn btn-priority btn-sm mt-2" onclick="markAsPriority(this)">Marcar como Prioridade</button>
+                <button class="btn btn-danger btn-sm mt-2" onclick="this.parentElement.remove()">Remover</button>
+            `;
+
+            taskList.appendChild(taskCard);
+
+            taskForm.reset();
+        });
+
+        function markAsPriority(button) {
+            const taskCard = button.parentElement;
+            taskCard.style.border = '2px solid #ff9800';
+            alert('Tarefa marcada como prioridade!');
+        }
+
+        function updateDate(input) {
+            alert(`Data de entrega atualizada para ${input.value}`);
+        }
+
+        addObservation.addEventListener('click', () => {
+            const observationText = document.getElementById('managerObservation').value;
+
+            if (observationText.trim() === '') {
+                alert('Por favor, insira uma observação.');
+                return;
+            }
+
+            const observation = document.createElement('div');
+            observation.classList.add('obs-box');
+            observation.innerHTML = `<p>${observationText}</p>`;
+            observationList.appendChild(observation);
+
+            document.getElementById('managerObservation').value = '';
+        });
+    </script>
+</body>
+</html>
